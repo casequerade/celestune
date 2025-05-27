@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Celestune</title>
+    <style>
+      @font-face {
+        font-family: 'Cursive';
+        src: url('https://cdn.glitch.global/671fea6e-38c2-47e5-9d5d-b55693c3b4b0/DOTMATRI.TTF?v=1729921538686') format('truetype');
+      }
+
+      body {
+        font-family: 'Cursive', sans-serif;
+        background: url('https://cdn.glitch.global/671fea6e-38c2-47e5-9d5d-b55693c3b4b0/bg_nv.png?v=1732375820518') no-repeat center center fixed;
+        background-size: cover;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+
+
+.title-image {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    width: 45vw;
+    cursor: pointer;
+    transition: transform 0.2s, bottom 0.2s; /* Smooth transition for hover effect */
+}
+
+/* Hover effect for the title image */
+.title-image:hover {
+    transform: translateX(-50%) translateY(-20px) scale(1.05); /* Pops up more vertically */
+}
+
+.image-credit {
+    position: fixed; /* Use fixed positioning */
+    bottom: 20px; /* Position above the bottom of the viewport */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Centering adjustment */
+    width: 15vw; /* Set width as needed */
+    height: auto; /* Maintain aspect ratio */
+    text-align: center; /* Center text if needed */
+    z-index: 3; /* Ensure it appears in front */
+}
+
+.crystal-ball-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.crystal-ball {
+    background: url('https://cdn.glitch.global/671fea6e-38c2-47e5-9d5d-b55693c3b4b0/ball2.png?v=1731133685319') no-repeat center center;
+    background-size: contain;
+    border-radius: 50%;
+    width: 40vw; /* Responsive width */
+    height: 40vw; /* Responsive height */
+    max-width: 600px; /* Set a max width */
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    text-align: center;
+}
+
+.stand {
+    background: url('https://cdn.glitch.global/671fea6e-38c2-47e5-9d5d-b55693c3b4b0/1.png?v=1731125837287') no-repeat center center;
+    background-size: contain; /* Use 'contain' if you want the entire image visible */
+    border-radius: 40px; /* Adjust this value for rounded corners */
+    width: 50vw; /* Responsive width */
+    height: 10vw; /* Responsive height */
+    position: relative;
+    z-index: 1;
+    bottom: 26px; 
+}
+
+.spotify-embed {
+    width: 80%; /* Adjust width as needed */
+    height: 50%; /* Adjust height as needed */
+    border-radius: 20px;
+    position: absolute; /* Use absolute positioning */
+    top: 55%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%) scale(0); /* Centering adjustment and initial scale */
+    opacity: 0; /* Start hidden */
+    transition: all 1s ease-out;
+}
+
+.spotify-embed.show {
+    opacity: 1; /* Show when the class is added */
+    transform: translate(-50%, -50%) scale(1); /* Scale to original size */
+}
+
+.crystal-ball-text {
+    color: #181C14;
+    font-size: 1.2em;
+    position: absolute;
+    text-align: center;
+    opacity: 1;
+    transition: opacity 1s ease-out; /* Ensure this is present */
+}
+
+.hide-text {
+    opacity: 0;
+}
+
+#questionInput {
+    padding: 20px;
+    font-size: 1.2em;
+    border: none; /* Remove border */
+    border-radius: 10px;
+    width: 60%;
+    height: auto; /* Allow height to adjust based on content */
+    text-align: center;
+    resize: none; /* Prevent resizing */
+    position: absolute; /* Absolute positioning relative to the crystal ball */
+    top: 50%; /* Vertically center */
+    left: 50%; /* Horizontally center */
+    transform: translate(-50%, -50%); /* Adjust for perfect centering */
+    z-index: 10;
+    background-color: rgba(255, 255, 255, 0); /* Optional: add slight transparency */
+    outline: none; /* Remove outline when typing */
+    font-family: 'Cursive', sans-serif; /* Apply custom font */
+    color: #181C14; /* Optional: Set text color */
+    min-height: 50px; /* Set a minimum height */
+}
+      
+/* Position the Submit and Ask Again buttons inside the crystal ball */
+#submitButton, #askAgainButton {
+    background-color: #181C14;
+    width: 120px; /* Set width of the button */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 0.9em;
+    border: none;
+    cursor: pointer;
+    position: absolute; /* Position absolute within the crystal ball */
+    bottom: 10%; /* Position the button vertically inside the ball (change the percentage to adjust) */
+    left: 50%; /* Center horizontally within the crystal ball */
+    transform: translateX(-50%); /* Perfectly center the button */
+    z-index: 3; /* Ensure it's above other elements */
+    font-family: 'Cursive', sans-serif;
+}
+
+/* Hover effect for the Submit and Ask Again buttons */
+#submitButton:hover, #askAgainButton:hover {
+    transform: translateX(-50%) scale(1.05); /* Move up slightly and scale */
+}
+
+/* Initially hide the Ask Again button */
+#askAgainButton {
+    display: none;
+}
+
+#userQuestion {
+    color: #181C14;
+    font-size: 1.2em; /* Adjust as needed */
+    position: absolute; /* Position absolutely within the crystal ball */
+    top: 12%; /* Adjust vertical position (percentage based) */
+    left: 50%; /* Center horizontally within the crystal ball */
+    transform: translateX(-50%); /* Center the text horizontally */
+    opacity: 0; /* Initially hidden, to fade in later */
+    transition: opacity 1s ease-in; /* Fade in transition */
+    white-space: pre-wrap; /* Preserve whitespace and allow line breaks */
+    text-align: center; /* Center the text */
+    padding: 5px; /* Add padding around text */
+    border-left: 1.5px solid #181C14; /* Optional: Left border */
+    border-right: 1.5px solid #181C14; /* Optional: Right border */
+    max-width: 80%; /* Limit the width to avoid text overflow */
+}
+      
+.reminder-box {
+    position: fixed; /* Use fixed positioning */
+    width: 300px; /* Adjust width as needed */
+    height: 139px; /* Adjust height as needed */
+    background-image: url('https://cdn.glitch.global/671fea6e-38c2-47e5-9d5d-b55693c3b4b0/Reminder.png?v=1730988952618'); /* Replace with your image URL */
+    background-size: cover; /* Cover the entire box */
+    background-position: center; /* Center the image */
+    display: none; /* Initially hidden */
+    justify-content: center;
+    align-items: center;
+    z-index: 5; /* Ensure it appears above other elements */
+    text-align: center;
+    top: 40%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust position to center */
+}
+      
+             #toggleMusicButton {
+                background-color: transparent; /* Make background transparent */
+                border: none; /* Remove border */
+                cursor: pointer; /* Change cursor to pointer */
+                position: absolute;
+                bottom: 30px; /* Adjust position as needed */
+                right: -140px; /* Position it 20px from the right side */
+                z-index: 3;
+            }
+
+            #toggleMusicButton img {
+          width: 50px; /* Set width of the image */
+          height: auto; /* Maintain aspect ratio */
+      }
+
+           /* Mobile Styles */
+      @media (max-width: 768px) {
+          body, html {
+              overflow: hidden;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+        height: 100vh;
+        height: -webkit-fill-available; /* Fix for Safari's viewport */
+          }
+
+          h1 {
+              font-size: 4vw; /* Adjust as needed */
+          }
+
+          h2 {
+              font-size: 2vw; /* Adjust as needed */
+          }
+
+          p, .crystal-ball-text, #userQuestion, #questionInput {
+              font-size: 4vw; /* Adjust as needed */
+          }
+
+          .container {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              width: 100vw;
+              height: 100vh;
+              position: relative;
+          }
+
+          .crystal-ball {
+               position: absolute; /* Position relative to the stand */
+        top: -10%; /* Adjust this to move the crystal ball upward, relative to the stand */
+        left: 50%; /* Center horizontally */
+        transform: translateX(-50%); /* Ensure it stays horizontally centered */
+        width: 100vw; /* Responsive width */
+        height: 100vw; /* Responsive height */
+        max-width: 400px; /* Max width */
+        max-height: 400px; /* Max height */
+        margin-bottom: -290px; /* Adjust space between ball and stand */
+    }
+        
+        .reminder-box {
+    position: absolute;
+    top: 31%; /* Position it vertically at the center */
+    left: 50%; /* Position it horizontally at the center */
+    transform: translate(-50%, -50%); /* Adjust for exact centering */
+    /* Additional styling like padding, background, etc. */
+}
+
+         .stand {
+  background-size: contain;
+        border-radius: 20px;
+        width: 90vw; /* Adjust to a responsive width */
+        height: 124vw; /* Adjust based on how big you want the stand */
+        max-width: 1000px; /* Set a maximum width */
+        position: relative; /* Make the stand the reference point for positioning the crystal ball */
+        bottom: -134px;
+        z-index: 1;
+    }
+
+          .spotify-embed {
+              position: absolute;
+              top: 55%; /* Center vertically */
+              left: 50%; /* Center horizontally */
+              transform: translate(-50%, -50%) scale(0); /* Centering adjustment and initial scale */
+              opacity: 0; /* Start hidden */
+              transition: all 1s ease-out;
+          }
+
+          #submitButton {
+              padding: 10px 20px;
+              margin-top: 20px; /* Space below stand */
+          }
+
+          .title-image {
+              position: absolute;
+              top: 87%; /* Adjust to position it above the crystal ball */
+              z-index: 3;
+              width: 100vw; /* Responsive size */
+              max-width: 370px; /* Set a max width */
+          }
+
+          .image-credit {
+              position: absolute;
+              top: 105%; /* Adjust to position it above the crystal ball */
+              z-index: 3;
+              width: 40vw; /* Responsive size */
+              max-width: 170px; /* Set a max width */
+          }
+
+          #toggleMusicButton {
+              bottom: 100%; /* Move it closer to the bottom */
+              right: 2%; /* Adjust right position for smaller screens */
+              width: 10vw; /* Responsive size */
+          }
+
+      } 
+      
+       /* Tablet Styles */
+@media (max-width: 1024px) and (min-width: 768px) {
+
+    body, html {
+      overflow: hidden;
+        height: 100%; /* Ensure no overflow */
+    }
+
+    h1 {
+        font-size: 5vw; /* Adjust as needed */
+    }
+
+    h2 {
+        font-size: 3vw; /* Adjust as needed */
+    }
+
+    p, .crystal-ball-text, #userQuestion, #questionInput {
+        font-size: 3vw; /* Adjust as needed */
+    }
+
+ .crystal-ball {
+  width: 90vw; /* Adjust the width to your preference */
+  height: 90vw; /* Maintain the aspect ratio */
+  max-width: 700px; /* Optional: Limit the maximum size */
+  max-height: 700px; /* Optional: Limit the maximum size */
+  position: absolute; /* Set the position to absolute */
+  left: 50%; /* Center horizontally */
+  top: 50%; /* Move it higher by decreasing the percentage */
+  transform: translate(-50%, -75%); /* Adjust to center it perfectly */
+}
+
+.container {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: visible; /* Ensure nothing is clipped */
+}
+
+.stand {
+  background-size: contain;
+        border-radius: 20px;
+        width: 90vw; /* Adjust to a responsive width */
+        height: 124vw; /* Adjust based on how big you want the stand */
+        max-width: 1000px; /* Set a maximum width */
+        position: relative; /* Make the stand the reference point for positioning the crystal ball */
+        bottom: -240px;
+        z-index: 1;
+    }
+  
+  .reminder-box {
+    position: absolute;
+    top: 31%; /* Position it vertically at the center */
+    left: 50%; /* Position it horizontally at the center */
+    transform: translate(-50%, -50%); /* Adjust for exact centering */
+}
+
+
+    .spotify-embed {
+        position: absolute;
+        top: 60%; /* Center vertically */
+        left: 50%; /* Center horizontally */
+        transform: translate(-50%, -50%) scale(0); /* Centering with scale */
+        opacity: 0; /* Hidden initially */
+        transition: all 1s ease-out;
+    }
+
+    #submitButton {
+        padding: 10px 20px;
+        margin-top: 20px; /* Space below stand */
+    }
+
+.title-image {
+  position: fixed;
+  bottom: 100px !important;
+  left: 50%; /* Untuk memastikan gambar tetap di tengah secara horizontal */
+  transform: translateX(-50%); /* Memastikan gambar tetap berada di tengah */
+  z-index: 3;
+  width: 100vw; /* Gambar lebih besar, menyesuaikan dengan lebar viewport */
+  max-width: 750px; /* Setel max-width lebih besar jika perlu */
+}
+
+.image-credit {
+    position: absolute;
+    bottom: 3%; /* Sesuaikan posisi vertikal */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    width: 40vw;
+    max-width: 250px;
+}
+
+ #toggleMusicButton {
+        bottom: 960px;
+        right: 0px;
+    }
+
+
+                                    }
+    </style>
+  </head>
+  <body>
+    <audio
+      id="typingSound"
+      src="https://cdn.glitch.global/671fea6e-38c2-47e5-9d5d-b55693c3b4b0/spacebar-click-keyboard-199448.mp3?v=1731136014985"
+      preload="auto"
+    ></audio>
+
+    <audio
+      id="messageSound"
+      src="https://cdn.glitch.global/671fea6e-38c2-47e5-9d5d-b55693c3b4b0/tonal-fountain-sound-effect-241390.mp3?v=1731136322702"
+      preload="auto"
+    ></audio>
+
+    <div class="crystal-ball-container">
+  <img
+    src="https://cdn.glitch.global/671fea6e-38c2-47e5-9d5d-b55693c3b4b0/Celestune.png?v=1730045312408"
+    alt="Title"
+    class="title-image"
+  />
+  <img
+    src="https://cdn.glitch.global/671fea6e-38c2-47e5-9d5d-b55693c3b4b0/csqrd.png?v=1731134602080"
+    alt="Image credit"
+    class="image-credit"
+  />
+  <div class="reminder-box" id="reminderBox"></div>
+  <div
+    class="reminder-box"
+    id="emptyQuestionReminderBox"
+    style="display: none"
+  >
+    <!-- This box will show the reminder image for empty questions -->
+    <div
+      style="
+        background-image: url('https://cdn.glitch.global/671fea6e-38c2-47e5-9d5d-b55693c3b4b0/Reminder1.jpg?v=1730732449838');
+        width: 300px;
+        height: 139px;
+        background-size: cover;
+        background-position: center;
+      "
+    ></div>
+  </div>
+
+  <!-- Crystal Ball and Stand Wrapped in Container -->
+  <div class="crystal-ball-container">
+    <div class="crystal-ball">
+      <div class="sparkle"></div>
+      <textarea
+        id="questionInput"
+        placeholder="Ask Me Anything"
+        maxlength="50"
+        rows="3"
+      ></textarea>
+      <div class="crystal-ball-text" id="crystalBallText"></div>
+      <div id="userQuestion">
+        <span id="userQuestionText"></span>
+      </div>
+      <iframe
+        class="spotify-embed"
+        id="spotifyEmbed"
+        src="about:blank"
+        frameborder="0"
+        allowtransparency="true"
+        allow="encrypted-media"
+      ></iframe>
+      <button id="submitButton">Submit</button>
+      <button id="askAgainButton">Ask Again</button>
+    </div>
+    <div class="stand"></div>
+  </div>
+
+  <button id="toggleMusicButton">
+    <img
+      src="https://cdn.glitch.global/671fea6e-38c2-47e5-9d5d-b55693c3b4b0/Sound.png?v=1731247285437"
+      alt="Play Music"
+      id="musicIcon"
+    />
+  </button>
+</div>
+
+
+    <script>
+      const spotifyTracks = [
+        "https://open.spotify.com/embed/track/1oR4MUBpyNrAViC8wPNpfm?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1jsY6pQeNaEConZWGau1L4?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5xEM5hIgJ1jjgcEBfpkt2F?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2Uk0aFqYCtecHL5MCq2we0?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7wC5eZcFS1Q1BsQ35DU6H4?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0hxeouHqP3qzpTHerA7ha2?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4QZpLKS4a8LkjjKNVm7Flq?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7bSJAuXjyhlTcz5CfoNDdt?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7q1noAWVCguWhDjQXZc5CT?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0Puudh380z6cOCgMaTNm7h?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1mHoqHeQClLBp5UO3TbUac?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2zrhoHlFKxFTRF5aMyxMoQ?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5kbxLpx8b3NAm4267TEXX9?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4NPARrLIbtMl29ZJv8ESr2?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/43qIaxCSfBcV4rGgobrYTp?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4U45aEWtQhrm8A5mxPaFZ7?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6fqaMyg066xlukvUJWdM2T?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6dB4Y5ydC6cc7jsqr71ip8?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7b6z03ctOD39o4Cez0wr0X?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6rQe1TxoU3CckTygOGV5t3?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/41sjzdjScVwnxnxADElts6?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1sZBzYhrQG40zcSuKkI93c?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5ky45fGKbzGYilDewlBD6Z?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7rsIWO8qeeZFRkHNnntZNX?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2nGFzvICaeEWjIrBrL2RAx?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7v9Z565IlQCbjF2rgrMwWN?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3y7ByLZ05tluscOTRgEJ9Y?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4wDSEE082RPcnhXzPzFhCp?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/37YoRLUu1qId0ewavgvnkG?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1H5tV0SkvBqxGllQ3HEVSy?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6W9l02gRsXVxzIuQC1oc1X?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/34sOdxWu9FljH84UXdRwu1?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5n7JlSbYBsUSncCwm5OAOh?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0SbytvHLix8OCZp17Pi0O1?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1aRyIsgzfUdSGAGz8zgFR2?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2CspwnypzT7rcWI9RfsoSb?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0oDDoTLcHPMnHJNmB2Ts40?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3g7MKGNn8oCMahPtptEE0q?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7DMo5pWZhITkeCCZi5qEHt?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6klFWv2xDGeTDoiKTtx4hg?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4ZTC6KvnQxloiwmT0Yhypy?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/26zlrWTl45duRsgdxBin1T?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1ia019RqDK2o4QiANR1Dyn?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4XCGfHpGVq8xw800o5cwWs?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/62HKW77nt6tudsIHXT2A0M?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7ov3TDp5D00Rnu5R1viX4w?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2f4eme6Kaz3NwkqmmN40yz?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4E6cwWJWZw2zWf7VFbH7wf?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/25pU0SsW1StdsEQbsFC7qP?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2mWfVxEo4xZYDaz0v7hYrN?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7h7p7gSIBzqTxEEoAR2lwL?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6DA7kCWYMggJjqPM84V2Ng?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6vvPecFTmWxDfEJ6cYT1wa?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/31L9yLXSj6LpCFupyMV6CR?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3gPI0DkzvSHc5s21lIU5yv?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/07oQOTzEEb5y7u0DFb8BO1?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3pDGJRDN3p6kCNZcD97FYY?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2o1pb13quMReXZqE7jWsgq?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/58Q3FZFs1YXPpliWQB5kXB?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5ocSQW5sIUIOFojwXEz9Ki?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5N3hjp1WNayUPZrA8kJmJP?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4keuUM29CtIWgsPRzRhXoW?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7kdAKah1VJ6Y1WMTKW3exw?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1Je1IMUlBXcx1Fz0WE7oPT?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/18nZWRpJIHzgb1SQr4ncwb?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6dOtVTDdiauQNBQEDOtlAB?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3WKg25vrbjJlkhsgl2W4p3?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/19D8LNpWwIPpi6hs9BG7dq?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/38tXZcL1gZRfbqfOG0VMTH?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3Mc9WnQJxBDKBHpys9O1Bw?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0Fl4eWzVaMUOdXcOrj6F1q?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6ufcuVInt0ocHrUimDjGlb?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1lSIZsWVahNJIHqX4Hh9ab?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4H0jGKPyORcxowWlXgSdth?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4Kw1ykVLHoFQxOPSVd8R2E?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2QDyYdZyhlP2fp79KZX8Bi?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2qSkIjg1o9h3YT9RAgYN75?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2GZ9D36wODanwoK6cGMZ2m?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4EF6IyONolQy0bIQXm2EmX?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/18WFFUIsewmA8g31KAeo3e?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4QMgEffJQuKtjCNvqfRZ0m?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7Mts0OfPorF4iwOomvfqn1?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1OhIn0L6iofnk5bjalWfHq?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/10BsQ7gkMNPd5iS35AjpbQ?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2cFGv8v5DcbJXHEdzouFne?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0D1OY0M5A0qD5HGBvFmFid?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5yvHjO06WHe7ETlgirLjbw?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0djZ2ndRfAL69WYNra5jRC?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2ylCrFiBu98SC0vFfaCent?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1bjeWoagtHmUKputLVyDxQ?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2SLwbpExuoBDZBpjfefCtV?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/05GsNucq8Bngd9fnd4fRa0?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0Tjdbd83LEAWrA0atsXMDJ?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5x5JM1BSB6vollcIzDocqT?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/70tp7UndgN0dLcAklTIrPJ?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5tW1WVLeSj61qexZmyb1il?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3qhlB30KknSejmIvZZLjOD?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/46kspZSY3aKmwQe7O77fCC?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0qcr5FMsEO85NAQjrlDRKo?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5jAIouBES8LWMiriuNq170?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5TIHdtMn3ZfwtWTuGNI0ES?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/20uUaRkfRJZG15mXfn7LaU?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1c6kkrWnpy68eYDfBdxNtF?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0UTtK6hregIBOsefavRI26?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5juCu4WFTFRZ2XilopAMTy?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5qI5EUqfDJpQ7w6sMECK7U?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/72Z17vmmeQKAg8bptWvpVG?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2SAZ9zykHlHR8yINfBmZpj?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0djkJ3iAARXRCbfbwwVc3o?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/532C3kNv3bmytLYe3LXr43?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2GWzRdezjEFyYrwldE7iCl?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5omxJmT8N8ykb9ZEMr0n6U?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/15kuqWifv5GzGq3A2P6EbC?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2kBHv0gFA2iheTUXmPB9e1?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7gaA3wERFkFkgivjwbSvkG?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2RoYgkPzUY0vY7lhUuyus1?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5t5ARYAaHrPA1pto1qdeuA?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5Vj4eHzcf4SJNtOx2SxWxw?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0KIPa0YuQ5QFmlAqRyXNd9?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2H0ypprQmdEsYokfki4nQ2?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/77YYd464qZ7ivCPDT9Tlgy?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/611lY9GPjg6g2YKsns3QT8?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2zs9kNMe8FvqIDactT8CBL?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/08W9Md8HXeJrx3omSQE2NF?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3s8yxBdiXFlEi6y0gfGreR?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2NlxUC1LiVMjswincnqsdd?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0VPFT123HKoQ2J6ipeDcI1?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1z4RuGHHajj2eRK8IMbxMw?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0fdK9ykZqy0e3vn7LbluM1?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2uJEnyojuGg31VVlLTQFpp?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3zpGIFghtnVlwMXWyKW474?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0Xvww214nuJgmjjHAxOxSw?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/762B4bOcXF7I2Y8UlKTyTy?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0Nbx8u1vn5iPvqdpYNubdL?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2CzVDJXkJEF6TqinDgmlXW?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0Jlcvv8IykzHaSmj49uNW8?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3a97LukmvJqUQBVgGbDPML?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1Iq8oo9XkmmvCQiGOfORiz?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4YUiJ6Av2Hp1hiWE9eeAjO?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2Eeur20xVqfUoM3Q7EFPFt?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1UI0l2L66HJ9AtoEOlHzv4?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6nozDLxeL0TE4MS9GqYU1v?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6m0OXTZvLhB6H8y0QKzazi?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4yBJbqSKP0aHGsyp2f08mX?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2ByBBvpR9b7IynvRmnG7kG?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/045ZeOHPIzhxxsm8bq5kyE?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4WBEj8TeGtRPNJdOmT3WJW?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0huV20ZR9HzTmBtXeYpEwD?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/61MvPue2ZjJ09jPshAFSyt?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5ZgypEwT8Mayum8GKG1KlG?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6BrMEbPSSj55nQhkgf6DnE?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2y4hHM6c48Qzk0bqh33XfB?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0pYacDCZuRhcrwGUA5nTBe?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5h1BN75CEh8wdSwE1xrbSe?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2Zo1PcszsT9WQ0ANntJbID?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7JIuqL4ZqkpfGKQhYlrirs?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0KVClXxsZEKkyWRNXeRFrE?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6QT6j7rKt7Vk3IuV2AUO9W?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4dkoqJrP0L8FXftrMZongF?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0U3u0HdRQjD8mAMYBak4Ok?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2ZTCl6wQMDSMfY4s8GHZdj?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2TTtQx3bX6MOmbOGcIuio1?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/01TyFEZu6mHbffsVfxgrFn?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4gsaTyCQgMJpmYtCaxWVhn?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2cUtg4hpCug4Gc9aibZIYV?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5rFNflUKMTsOlBVdGv1ahL?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6zZWoHlF2zNSLUNLvx4GUl?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2tQew7pG4IhgNGplOSNIj7?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2JoZzpdeP2G6Csfdq5aLXP?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1QhOXxj8AbUewc5DG07pi2?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3ZYGUrQ8qZiHv8FAaJ72Uo?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2i8f4VnnBjy0yDqH2C452a?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2DtUUBwYwEzKMTMDrc5EiO?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2AEepQ8zdGMSaSYrm3pq0W?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/07K4GcCDSTiXUF5ssyTRUM?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/745H5CctFr12Mo7cqa1BMH?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5sra5UY6sD658OabHL3QtI?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6IwKcFdiRQZOWeYNhUiWIv?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4rCuwgRRKaIiHlHDc8Bga6?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6sdkKvEQxrgRMqCkgZUbfx?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3O5zp6tOdGFWi0NdzC0frI?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2x3vwXWuecPrRqgEUuSUJA?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1xt9Nzh3Gc7oFdNIIbbvJr?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/73vLyboX53L1Xpk0ILDm9s?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1KPm0gak2346hzH2TeZhir?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4qG7hWhljsqqENL5PaLA2z?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4ONxwIxXwFOjLiBBDjLbkr?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2xGGpmywtvPY3h7JkcwP1E?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0otn0qLAM0yAXHNSiRsHwq?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1uNLqYeego9BYKjys6OhJ8?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0iVBRdKhKKrX4PZwmXDset?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1DEJaWgi8ZKdStRO0iUX6e?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0RiRZpuVRbi7oqRdSMwhQY?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1jecO8NeYLsVWVptITz4c1?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4oZKyVTuQwKAXlplVagooE?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5xpmZgLxGpKmEz3Mphquy3?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3iBgrkexCzVuPy4O9vx7Mf?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5fpyAakgFOm4YTXkgfPzvV?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1wUnuiXMMvhudmzvcCtlZP?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/02wk5BttM0QL38ERjLPQJB?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/56v8WEnGzLByGsDAXDiv4d?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6dgUya35uo964z7GZXM07g?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1fP8o0lIaSIE5jEeblT8df?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4s8BIKx4Zh6ryAEz8RTlaU?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/746o21MIT6bflVlqNCSh5Q?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/799NMsaFBhEbMBqcKNiGJF?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7AkPusgKsrTqbOcTTbRnFr?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/34ceTg8ChN5HjrqiIYCn9Q?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1KGi9sZVMeszgZOWivFpxs?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7G0gBu6nLdhFDPRLc0HdDG?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4ICiIDVpIeq26i9Xp1bip8?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6dTA6y0C2ReQklntzZl8l3?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4hqJ4bSlYJOXb6Z4SRmzxs?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/30Y4CV7A6YqtQtTTo7Ue4j?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/79uDOz0zuuWS7HWxzMmTa2?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5xXqyjLicvEpch72qEryFT?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3sW3oSbzsfecv9XoUdGs7h?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5sdQOyqq2IDhvmx2lHOpwd?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6rdkCkjk6D12xRpdMXy0I2?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4OAuvHryIVv4kMDNSLuPt6?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0kAZ3H6G9Zac4PMpmobMkj?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0BUoLE4o9eVahDHvTqak67?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0eFMbKCRw8KByXyWBw8WO7?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/442j8VxaB60dWf9cBFuX5w?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6BmPhMWFglgYTnr1nO3rWj?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1nYdkPCbHdYi4w7s2L6SHA?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1q9bLSeIlGf2xBvbOkp2Wr?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3nB82yGjtbQFSU0JLAwLRH?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0muntSMuAZzcwYBBMZj6sf?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4MNfg1JHrCPcRI4bGE7J04?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5y9SsiwEDr8oPdOBbBBIyN?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3EaXag2RPtjbncKcTWfSNQ?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/63oypqje8UNsr10hNDislA?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3G5e3LMVoAB6cqGa4lRm6R?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0ACt3PP22HyKfpFIV6AQUW?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1E95q68SQxX1dDzYGjHJ1s?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6jpFPa2m8PjHurC7508wYB?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/43rWni1MoV8PKPDGjx3cN7?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0YQE2r74iWKou2E46GZoKC?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6Ly7bORyX2n7baY1RcEWsK?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/03OwtkeHmoMT8JY3kv8WhF?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3zQyl7ko8alM35mvYWmHuu?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4UAzuim8r8ga34qvDjnNFf?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3K4r00KlXytLJDfuytngmx?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7HhKuJbtiNbZsEDLNQvOnH?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/36lkJSDyMEZoWTqtRj8Q8q?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1zNXF2svmdlNxfS5XeNUgr?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0gcjc7Vt5xtcfmJgf6g2IO?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3KkXRkHbMCARz0aVfEt68P?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3KkXRkHbMCARz0aVfEt68P?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0zYP35FfMItfaP6c9gcQZB?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0heY4hxgRs6s1wrMtrS3YJ?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2sHwSBNDZN2yjCtgwStYt1?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0cXRafInOlc1QH519RXltN?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/67WTwafOMgegV6ABnBQxcE?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6bIDlUJW8Le0VmWrBovJCU?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3yLr56klPeVdRFRSThUbqo?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1XGmzt0PVuFgQYYnV2It7A?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5qII2n90lVdPDcgXEEVHNy?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2yceD2hx5HhOLgkm1CITCi?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3s4U7OHV7gnj42VV72eSZ6?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7C0w28EsX0Um2FrZs9gso2?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/49MHCPzvMLXhRjDantBMVH?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7izFzcBTx3DVXFeFYDeZKB?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3goSVuTt3fDYDP6kRnFwuL?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0kN8xEmgMW9mh7UmDYHlJP?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0Z5ok0QLLttAKsujOZYOXf?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6epn3r7S14KUqlReYr77hA?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0aPZbnkMoWJaJ5CNVLCj8S?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7AE1oyRpPGoSwDs8b9XBO0?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7uvtPp6So6MtrGSC3LpKfs?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4uOBL4DDWWVx4RhYKlPbPC?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1hA0XjshsOjuYScKX2BsZm?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2rm72l5pjfby1cWvPMUojI?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4xHKXUTA0FcqIPIjG9W2k2?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/03xWMkKEbeO4SnylA53ipj?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/314oBdIvnoTPDwSP4zOP8p?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3ACQkIMv6nGYHRpPGyS4BK?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5EL8hqM8YQJHKKnzGdahly?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1rjFUFFB9xokmzBioWhrWk?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1n2wszmJyVkw6FHqyLnQsY?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0l3Q2N0Rn1Gzqc38KQvToO?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7guOTcWX5yhLDbcLgQlQjH?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2Lc5zGwYbAHprruXw7BRN4?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5GsjAhI6aqq8K269aaJplO?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0aV5uARAknQgYhBaK944FP?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0P3w8D7NAJb5xYvSQBpHq9?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6f6SbYsZtqP3DpPjR5OLiB?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4z4PB23xYTg1oANmyZovsw?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/01Dc5vTMc9axpkvDUy0yiD?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1H5tV0SkvBqxGllQ3HEVSy?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/34jcAUvjHcpydYS8TTLvan?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1tTYOz9KfcXJgB1vON2DhW?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6ZAdaChu9ukRHdWARdTWIS?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0dRSOmb7pqkkmjXCu5BYbe?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2wsRZURBbDbaQUuVT9piu1?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3cw6T3OEgqLiqEDLDQPSnE?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0VE4kBnHJUgtMf0dy6DRmW?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2m3ObD945KvpE5y9A1eUWm?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1zRwSE8tTRlDBXDuh54JVo?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4sDO0oF0BRxcfOII1QKfCl?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3t5PTyaUAASJe1fZibBKTm?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6VfXlYHpJeNzHCWPU7Smwd?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3HKmSsHdTgkcVSPJJGAi8P?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1otG6j1WHNvl9WgXLWkHTo?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5aGXoGa7ZmsYr3dvQJsR7R?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7kC97zPE0PxrcItXyGdk8P?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3RwulJfeVhkKIuk1Zxu5vD?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1nmBntKopFUKPDv4zdHrdl?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6Z0F3Mqj7tq1CBZo5qMlUg?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6YXG34IWbilypPwjBTOrUC?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2AILbz83cBnrAMAG06rZts?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2RUcwyW74Sv4VracHFrKdh?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/66tOfHVH3aUrscg8vExRV4?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6ocbgoVGwYJhOv1GgI9NsF?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3e9HZxeyfWwjeyPAMmWSSQ?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6RRNNciQGZEXnqk8SQ9yv5?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/349Wc5mDu52d4Uv8Eg9WZv?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5TTXEcfsYLh6fTarLaevTi?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2dk3qSc7779ecP8w6rNoT9?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/14kYOiFVPb7E7NfFbqhdln?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4P9Q0GojKVXpRTJCaL3kyy?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6DEMMeWXfmFAXgDUMMzeg6?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3JtRSUOj7wSAXFG76T89v8?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6klpXs2uAjagnZMFkt4qkl?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0gplL1WMoJ6iYaPgMCL0gX?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7zxLkZbUxITHabPzGN8Xgc?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7oDd86yk8itslrA9HRP2ki?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3Fksah2e8MTz1HbLCASYpJ?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/51A8eKvvZz9uydvIZ7xRSV?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0Y36El0k8fS2myogTVGXKP?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/77I6NcjXgtKX2s2qdDITYJ?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3o3bRIOKDwGOdqL9HBUNrO?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6ESVX3WzRFXz36f19krVsF?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6AQbmUe0Qwf5PZnt4HmTXv?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/19zsSUEuJNzNA6eqInqyF9?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7EAMXbLcL0qXmciM5SwMh2?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4sUlsy0tPv9n5nqrqeA0lE?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4JsQRpwhrOXy1kpiLxF9Ld?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/20MOKIGONywL5xIoB7RRAR?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6qspW4YKycviDFjHBOaqUY?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1I93YiKgu2P5pwprWmziPI?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4cluDES4hQEUhmXj6TXkSo?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0GLXQAdrh4tdvz0JLw8DX8?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5QkDxwoO9ovaKcWIbverRP?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7uo2L5FAja3pWIBa3HJVeC?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2qKdOqmlC99CdhXvQWBXd8?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7JFGm7ptMSB9q8BZMDUEpT?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2lnQcP5hr4RKR63TFvnI4k?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/78TTtXnFQPzwqlbtbwqN0y?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2ENexcMEMsYk0rVJigVD3i?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0FpT75cRdvf6va1TARHrl5?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5pomCBdsTZSDCFHH8BAUQe?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1K1b1rPjbbam1NXUPg4VrK?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4vx1w9ScmKyQ7ACBEeYtrR?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5SMCxRA6hB2jEhroaYfw6N?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/55Oas0uFikDQDxEAoBTY1i?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6SdwiOJyhFOq9kpnvX8CY4?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0GLmMLR4B8uG4xHt07wemI?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5lgqMorcT2crsPWiYlgec1?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0xexXKZ1CAIrNHhTUX5Qkh?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4vIQRcracgnbO6dD1mMJW5?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7woW97CfcWaKtuC6W5BP2K?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3Tb98mVooVO6m8AG8SYh7j?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3S7HNKPakdwNEBFIVTL6dZ?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7vRodvsF37NGUYRSVMIRXj?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0MAIxtXWimwhAAQOST9jp7?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5tCuz8G2joSFqU7wwuSMZL?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2Fv0yi0lbEmuVKnpcy8gGl?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5T8EDUDqKcs6OSOwEsfqG7?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4OnjSIwHvgpvUIP37y18zF?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2YI6Mh57dW0FmCIpvruqkZ?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1mea3bSkSGXuIRvnydlB5b?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2ehRU518I0hYqMGQnk4lDY?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4zK1pYVKMB13es6Bim0muF?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1IRRqn75jaZHp7zMT1NGbZ?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5iGleL7HpEThuuYQ3us2jh?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/43I1H9UKzvRQZPBzq3ojhp?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0cc9lgdfHqeS8t9BzbFFmj?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4SrpTN0907m7OT60sYI9GS?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0tIWk4w1AfinVnGxiaSz5d?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1hUXDEqjNIIbfjTcaz3jzb?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2eHj0klWkwRQuIrNlPpCPa?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0nrXQ2iKJFnPQYXZHKky9u?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1qFC4ot7cbcSLjY8uCKEdt?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3YKptz29AsOlm7WAVnztBh?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1cPtMErymxlrj7pssAB03r?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/53QF56cjZA9RTuuMZDrSA6?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5aIZ2jtxZ4o4GHQXTybkIa?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2tpWsVSb9UEmDRxAl1zhX1?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6Hk0oWJYqozKWWZdFbqGRr?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3KsqjUcgcqUocslGHOULkS?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1DmBwlxBidKu5eTOX6Jlrl?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1QUtm56yu82Q7loVRmon0a?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1gJt0OFStLJUwrD4rmouIR?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2zgpMaaXfVJqUJoMbjmfH2?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/65FftemJ1DbbZ45DUfHJXE?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/71nnhckUPfuphvyYJx6l01?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/23YwgEnMllsZl0POeWiOzR?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/11lcftRIEVOPDBHDrH1mm1?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7vm2bDIUViATeMyGiYsHxC?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7mjO4RbTZIb1SfE8G673Lm?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2XqpHPNlK9KbeIVqfSeLMO?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0Cuwd86fyu0lPVokzTp8Hu?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/15tHagkk8z306XkyOHqiip?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3r8RuvgbX9s7ammBn07D3W?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/496vIKS2INz840xZaKncvR?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5ttriFwkXJyZBPAD5ykDHo?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/40SuiVcQ5NyDk48nZSADK3?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0lbtRkC7Bs9aR3ZYvtZydi?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/12hD59WtTU92K1VcCXqLlw?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3XKI5295qhFbwNesz3ollU?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1JFj2lCDNBTufXe68Nw0WE?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6eEchTSWRTQtAzzeEPtOpr?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4zuzAypEjNbmkfpMaef7AB?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/456nsH3QN5RspaYysK2GKY?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5OYbhmr4VY1zSGh7DsZ30K?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4WwsjFguFdrwdid3bbV5mq?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/56hioFjQ0DXrdn04hZcFgG?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0lKwPr2j62cLlhvoLA2VHd?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6ohzjop0VYBRZ12ichlwg5?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3qoftcUZaUOncvIYjFSPdE?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2d3d9xZutJjmUpntiyHt3F?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3rWDp9tBPQR9z6U5YyRSK4?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7KokYm8cMIXCsGVmUvKtqf?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6NnCWIWV740gP7DQ8kqdIE?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/17Y6aljeQynHeswy0CTars?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7xvpgEWTUWekq9uBcyW3yu?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3QF5RsWzK1lCvf2o2cY65P?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0wavGRldH0AWyu2zvTz8zb?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4AYtqFyFbX0Xkc2wtcygTr?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1LLXZFeAHK9R4xUramtUKw?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1dGr1c8CrMLDpV6mPbImSI?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7gWDmW4WW3zPpy0qMn5aMI?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/37mbA1RwYja7WFaIOzSczX?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0wokCRaKD0zPNhMRXAgVsr?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2m9K7KlDOQ0NXk9xBpkuoZ?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2rd4FH1cSaWGc0ZiUaMbX9?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5BK0uqwY9DNfZ630STAEaq?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5vI1exL3zFhqFWDSL9fq5H?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5bODPM8nTwwTIE4W9fuUcC?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0HMjXBAZmSYOTTi33WpMso?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5AezhHjX3R1bmxcAEgrFpS?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5O2P9iiztwhomNh8xkR9lJ?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/22UDw8rSfLbUsaAGTXQ4Z8?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7lgkalpjYCPFKRrhknmr13?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0BcQMZGuFhQpIaS2GcWIKG?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6NE4KqfmNiCWG0LcKpOZ8A?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0V3wPSX9ygBnCm8psDIegu?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4D7BCuvgdJlYvlX5WlN54t?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/42Ly2StqaKRkS5yxhfLYHn?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1wtOxkiel43cVs0Yux5Q4h?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7F0MuIk5glqtowCUjbn9es?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1sZBzYhrQG40zcSuKkI93c?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/29fsVDL9T36N0tyD7ByLdI?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3XpgLBx3TGuDIFV5gUaR0w?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2lgz3yy1AyoceOVOOBmiOS?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3TcL0dyCMyr0kyTTc4NLgI?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3nOz1U41SZZ0N3fuUWr9nb?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4Rj8LmDWys5LA2yeQ8GFvh?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7qpM6ZfKiHVCEmqo4pPnKR?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1FyzE4vVOskFfLfaFi7aSs?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1p3EE66M8YuZ86FyYPpvnn?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4nAdTcoJUBSsP6Ab0XUvRj?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4wDSEE082RPcnhXzPzFhCp?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4EpZ4eYuZOwPSSwyqpdHnJ?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5LiWLIjktWQCV7CCVBZ4Q6?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3aqP2DhIRLJLkU2yHV2vcc?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5dFLCZFECZMRYICtN31BMg?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4IQkfUsrwXol38VV3U7t7T?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/73YUReisjb3A9ActdLLjJQ?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2jdAk8ATWIL3dwT47XpRfu?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4RewTiGEGoO7FWNZUmp1f4?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1gGVs5VYqj912AJCNp2sSe?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3zdkwyzcqpWp0sXNZCx8cG?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3mVbqaZdKWvijKi7ngZDiy?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2kIq7Oq6YNfdUuTrmPC4w1?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6WpE1zKOrnVKNDUHzwsUJ7?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4JcfDrtQWE45N1X4MkcbiV?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/41r2Q4UEDdU9cktfgQETnx?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/02SbQgZbzMoylPoGr32ugF?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7KZThhMaRjQpB9x6yIJvZ8?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6EviFqpmuvHfQaExMKmt0A?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/74OLXYsvpfmSgPCMMi898K?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7GDlo8IkNwMQ7tB3qoYA1I?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7K1s5Fxj7f6RexhrykThgW?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4s0UxMiB8uYcKg4uAxCgn8?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6Ho58vQUjGnBU9m8Z6uNcv?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/21hB8x6QTEsTfIDENPcyXm?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3BHR1mJOqn2UZyq98YKPgd?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5NVkktUlAylhk7f0t63eth?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/31NdfyVyQkSn8dmB3ouhoS?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1qNrxL84T9TMyIx6aodUlr?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/51lPx6ZCSalL2kvSrDUyJc?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5B3vh2gA9u7BHqxjnZKR7b?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3W3KtDwAIg3mAruSpnfG3Q?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3gFQOMoUwlR6aUZj81gCzu?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1GWspjvuSbWHFGjheycGIc?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4FYMiHawD1rpYPMHymDPfz?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3yYGzdBQRBpqhQ8TGehn9Z?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6XYtNPYTWSjq6vOKniK5O7?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/540I1svL0E1dW0GF6szVcd?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1qyETQ5t2UG76pfqnYOZ6h?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6w2pWpwDY4igt0UAtowyAV?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6q0bTn8XKEdSrSxfJpfNQz?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0s2vC5MwdoLvQ8PdNBjUGX?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/260tKexWYar1KVMPmAEzcS?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5eiCYAQ7K7pob2Ev9nfBXO?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1t8sqIScEIP0B4bQzBuI2P?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3dPqT7eqD97dsN6kFUixk0?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1SJhYNxOZSItqrB6upWyE6?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/12AFtgLHb2PARbYKaIW0Wo?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/083zmvQUCjoaEp4Z8WJKGv?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5ZuqV8q0TgfCGluxgPEkNT?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5w94qYPwVF5UNW1RoE80AA?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2DwUdMJ5uxv20EhAildreg?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5rbuv6zso7QSaKt265H3M3?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7xRIPGewMZdh63k3p6YTQi?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1BLRkekkxx1nNpfuvSzFd1?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2POuS8xQxLtR52E8HFtAwB?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3t3hIECOcH2i8o1robkxai?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/16FoyabyqWiC4G0crZDt5Y?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4jPr49jXRJHftXlwTEA2w4?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/038yT5tqY1Fl6kYAbz8wCN?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1m3K5OpiRXQhLOzbEe4Sb1?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/04Cy9EVwlBwwoklGb4knOP?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3Eb5sztvEMa0Mqnb8DUAlU?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1tdltVUBkiBCW1C3yB4zyD?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1sjmKmR4u9xDeJHjDCn2bZ?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2xdmVxqmMvcT631h9U2JR3?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0RpGCxYjTP1Zm3m8rOkHOp?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/27JXVe80vFun97upipztKX?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/776I5KOtISF3ffdDp67AgY?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5Tmb523k78t6tCLCdMsRTg?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1QioTNxQwK7HnB6mDOjlAr?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3AgMOlgdrG9RJXDWifcjVd?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0a4MMyCrzT0En247IhqZbD?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5expoVGQPvXuwBBFuNGqBd?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2pIUpMhHL6L9Z5lnKxJJr9?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3H8VT8INfsTcvD73WWqSM5?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0lGQyNeR1XM7gkcwg8p4Pk?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2Qmx8W62PEz88T7cGjHDug?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1JQ6Xm1JrvHfvAqhl5pwaA?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7wWw7hBmErNg9u5w6Xx0vy?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7nXZCcFAy1oCKQG2SqLszv?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2kyVQg00pphEufGT59M2XH?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/09NEBn8Z1Ly1hBgA5scAhL?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0a5RE3K2dA3Dm7evtJwxwh?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3GarMrGrOc5asepBOBQnWT?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5rKor0rlCbaA7j755zhnhb?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5zvOXJrzzUlvXwyuwZ0toZ?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/41cpvQ2GyGb2BRdIRSsTqK?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7Eg1r1sBcK9T57tf3RWYID?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2XzpijVOaJYNwwiFeSulBJ?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6adfqWr9df8u6qjX4rAQnW?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5x9yJ891TANz4TnEh8Fa23?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1PckUlxKqWQs3RlWXVBLw3?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/48QKOSXSIdV6nZkT0pfqLn?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3tB10LUdisNWISpLw5gPCk?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3UKKwGrpWWamc0XNSKXjmz?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/49fG0SmEX0st2OkggVaRU4?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/28tufPkTcXmdNqTvi9hsoG?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7bi5vk9KoY6Flkat31ViYD?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6lzc0Al0zfZOIFsFvBS1ki?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2WfaOiMkCvy7F5fcp2zZ8L?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4Sfr3UOYvxxc81ezoeRLkF?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6QLs06H0H54PPV90ZUVWRE?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2mgzUVvDpb1zMSB4glLQ6T?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3BeQzzSxNb7lzN1pJwXXDf?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2iyqxvWyNeJeuk8Eti1WYu?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1kKHlRNEXpIkYARjFXGmnm?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4EdnUHwTb9UHXZ1o3KsaQY?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0Y4xg5612xZ3vAgWEkMjw3?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/09FTMPlZYB3WI9YqX9gUJc?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/682LhkcJ6ngMlxKX1dHQpg?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/75FEaRjZTKLhTrFGsfMUXR?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2j1fFjWHCI9KJSwcuYAOyF?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4qJkRSU8wzM6dN0xXtQZWy?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3WO7mcGfosE6fHqokQ5FYQ?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2iC4ZcIRCIu5xfxlEBol16?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/715yOhntcGELY9gb5rrSTl?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6P3Iea6z8DSvvBuwpdha9X?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6MWw5eGSjfkNLmGTmMqTPn?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6hM35CfZMbhVm3XRwsotn7?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4wSIoDdhXG9pgk4tG9fSAS?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2kXnOV5df9njPkGKOiYDfr?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0uQ1e0uc2U41ns5tsriLmr?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5Ti3fqGTfjUsSdylFNy0Ng?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/360UM2DaiHZPRu0EsrOvMp?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2s07iRgvSgwLFr23eXFFQQ?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1k6WdNgK2EFLIr3opwgCpm?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/75WOBjhzpCPLxo8MqXyJf1?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3xhYZFALmH1FaJeUvFHgKv?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0rzaRSujxA0bKyjJl6vHYq?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/07lxDm1s8FVO4GF54Nooiz?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2fTsFCKRFQ5M0igJgabnLA?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6STHWwMa2vbr1nKArQH7hd?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5ZoDwIP1ntHwciLjydJ8X2?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5mwQno4zd8mR4pWJdjNqgN?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/78oLZynoOgkf2dsaeqdR93?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/110AMH5GQUMgQhUHNODxBy?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0W95eMaAxNVYTquOsXXkC5?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1jVjOcs7QeQZJXScbqvofI?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3NYq7c5AIUiubPz9UZl82h?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5e08a8D8T3z4LDXbUIjxKQ?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1YwbObIsxLhBTjSI5lwJz6?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6O20JhBJPePEkBdrB5sqRx?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/213x4gsFDm04hSqIUkg88w?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/58ugn5hQqFTHp0WcaR8bPz?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4H4Ztgl583oICA5cbC1wll?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5EcCFzo4PyxTYQsrHGL9xU?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3zyaYdUDru84O109I6Ct5B?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3EeWadHJBLfTiVOL4vAR1A?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5CKEQUucs3M5To1LqfC8Qq?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4lLtanYk6tkMvooU0tWzG8?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5zXK1z8U96zU3tZlFFXYdH?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4ZG4aqyBvKk3V3yZBoLToK?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5cuLneJuFwTKdXn2wsGg37?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6uvh0In7u1Xn4HgxOfAn8O?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/51Zw1cKDgkad0CXv23HCMU?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4j6kId9QIqhoXvqHKgSKa0?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2NcQic8JxdjAlAHuNbOIRE?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1qEmFfgcLObUfQm0j1W2CK?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5LYMamLv12UPbemOaTPyeV?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5Sl1empCuBhQweOaczrEWY?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6fqaMyg066xlukvUJWdM2T?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5FVbvttjEvQ8r2BgUcJgNg?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0ZPEsZH4b2gEj55WK6qCZb?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5CBnWXD8M7e8Q6WubFLtXy?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/58dSdjfEYNSxte1aNVxuNf?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1VyAPe81AxMkjAEtZRHHlH?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3TZ7NHkMT82AhwuYsd00Hz?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/25jQhp7TC3nIJ3Jm3QoFI6?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/37YoRLUu1qId0ewavgvnkG?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4LRPiXqCikLlN15c3yImP7?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/11cqsCFJayk8dLyJqPvGvp?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4jbA7VSQHZeWLktuUuHWbz?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/038GKUaUj8NzPOy29kwPCq?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6FhAXBwXgV7S4aWxceTgfm?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7I60v3Ctgf1eMefMc69zAo?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4HxVweMysEnuYxy3gkFtKk?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/52Dw5hXeylenurLTKoFJfZ?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6E1uYKEIUmjiLFsKEYsgOe?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6YFzL1910P0fRFh865HmI3?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0dcnrLo8s1rhjm8euGjI4n?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2bnJ8IxZnVc2YmUaX0sZap?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5NIHhuAdsaZHmGeEoHiGY7?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1jkO79LWdg5RjkSZ2VfuTo?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4cwJYLZeVMTjF6o0Nzk9nq?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5pqHHkbc1haPiaVBzUmg2d?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0MPJ76s0uath1HDrR0aLg3?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1FP2jE6moLiHoNUaWTUyJc?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1AXO42HiJSTgPq7KbJAEjp?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4IaxDf2FixiQXq0mW7key9?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4iBBXbtorlcgQv9a3kS2Ln?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4QLbogzP3qlilBUBVSI96T?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3U2C9uUTwaOV7idiIsTSsa?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/77W6VUoJdasCQgjc5DW19q?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4TWywHo2zy1FF6vZewaPHW?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1DvRLRpLo6U5RUseEv8tDQ?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1wo3UYTeizJHkwYIuLuBPF?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/782NR6j9LjIfZg4BbCcJdl?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/09QE4VI4P2ZIFHmVxeUSKd?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/20A2K6ZbdhIORwhL2Wnmt7?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3Txcx4jhuiTZSvhAL0WaRc?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/45OX2jjEw1l7lOFJfDP9fv?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2hHeGD57S0BcopfVcmehdl?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2r9ub1K7V4PrLRsIA665nS?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1SviCt3TeIEjBttyrgNASo?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4ubg38wkWizzLsQwLuE6rM?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4s52lp8tyE4uDFZgKQIrPh?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3cQmqM0awej9iAESjhKrI9?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6HIF87ra2YfFxwAziOFfgm?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3HopXEwE96WWXPP4OK78wW?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1gH1h30wkQdd9zhY3j7a8T?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5c8UYxBbd55yKS9oBNxQSt?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4HHge4zAyIw3pkrtFzmwCl?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0Oj0TT23GBH2XuHAaSsloH?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1qhp5owrFGeZ5Jgin28nwR?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4KROoGIaPaR1pBHPnR3bwC?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2I8YAEA1VmCuP1wkJHMpTw?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7HC7R2D8WjXVcUHJyEGjRs?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7CAdT0HdiQNlt1C7xk2hep?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6qkx0tenDglbF21CU4wa1k?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2GqVLNf2Q9SMmOb8NjQ6n2?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0eFQWVz0qIxDOvhLpZ40P7?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6ksOaijLwaSWTVRtPgakt0?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/04MoJkJzCoU9ukeewv5Vzu?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1AKrRZFzULcsitFvxBPWam?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0asd5fbnDIKKRdnYskMFDa?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7tCmUu18EkTlGhGV2wmE7x?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0UmAJi6GA97EVy9hlxT9ip?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3oSsklj0Q1zDzJbV8iXtDL?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5bN1ltT5BhVMnszmgsqGD5?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5e2YxCroSZ6TdecwSPxRL3?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7uFFGrqfD3KOdG6AgJ7Z7y?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/68HocO7fx9z0MgDU0ZPHro?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1j6VvjYG0YrkMTcyCBHj8F?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6z1kLsntE7FuzKZHZWrXYN?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6GRDI9suQHikFP6euIXnpq?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6Pxp2YYuFluzng2obJ2bvq?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7GaXAknKJeuzXm5LVI4Qjd?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6QYP6Ra6QXXRkn3T98dpRB?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/34JfHOd0fcefm4FSPSrIhF?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5b4Poxp26GdOf5vjouzZrA?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1t7AA4xxqEseapeIJCiQ5l?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/39e94FibEyArAANIAxDMbk?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3PXRxtXNINwnA9foiItVHt?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/36Y8dOgdny7jMqMZvzh6Eu?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1Y7AZ3akqDipAyo6mmOQTy?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3LTinH60rltyAZiMmHF7JH?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6NZMdOsLytBxcClbYkD5SU?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7dbI4g3m8A0isJVvYk2xdD?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1udKn1oNKYQSQ9OmiIWCMu?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2hq50hCUUknhUXZ9uL3wgq?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1a1LrfgkTvfHFykIxcv8WU?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5Ts1DYOuouQLgzTaisxWYh?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/39SQ0CjIineoa2mbiJpZdk?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/70Mopm3mPhbnthnVhDr0cz?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/46WLaoeECrhTqFDkTdTjTL?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0CflRiqtl8oVKuvscVgy6F?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/02JIdsrod3BYucThfUFDUX?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5IhzJOXNE7ki0IIJbZbnGq?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6dapXTnu72OvZG3Kjl6n1F?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2jyzwg8ZIXvzOI0zIGP9W7?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1IF5UcqRO42D12vYwceOY6?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5kRPPEWFJIMox5qIkQkiz5?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5Ohxk2dO5COHF1krpoPigN?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2IOFZdYYkFxEHVz1w34PoL?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6iYMfxznTBlcVOgRHab2W0?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6VzcQuzTNTMFnJ6rBSaLH9?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7xyTnVztxe27ZM5ocsVDWL?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6GxexyfupoH665lm63C0zs?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/7wmFsS43fO8vAg0vcr776N?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/4IrukTHhqJsr8SEpqz2Zx4?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/5pQLZ335zppmGkcaASrnaU?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1siqwUNydX8aQjUIVvJ6Pz?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2BCYKFDWnZi9PMkZiemQh1?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/01NxFtuXZ30sDVfdErskKl?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/0InJPuWIYp8fwlBGIQglLf?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3wS47sXPddjE6rbhU7u20w?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/3QFGCWjd2gFxMiSEh0nNoA?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2mUCD9Bx2IOFFrVtEH3tyg?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/21oJ1K99GBJrE2GVQGVjA0?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/2EgfLUS0jNiujIWc3ZLEtn?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/1t9FZ4govN4TS6RcA6QpYH?utm_source=generator&theme=0",
+        "https://open.spotify.com/embed/track/6AXoNiKAmN32HBEfhHmfSn?utm_source=generator&theme=0",
+        
+      ];
+
+      const fortuneMessages = [
+        "Initiating universal query",
+        "Decoding patterns from the void",
+        "Synchronizing celestial data",
+        "Translation protocol active",
+        "Calibrating star frequencies",
+        "The universe responds in binary",
+        "Interpreting cosmic symbols",
+        "Translating stardust codes",
+        "Decoding from black hole echoes",
+        "Language of the stars loaded",
+        "Message materializing",
+        "Finalizing message from the unknown",
+        "Astrological algorithms processing",
+        "Quantum calculations underway",
+        "Harmonizing with cosmic frequencies",
+        "Signal alignment confirmed",
+        "Data analysis complete",
+        "Universal insights compiling",
+        "Constructing celestial pathways",
+        "Sifting through cosmic noise",
+        "Mapping astral connections",
+        "Hacking into the universe's code",
+        "Linking with cosmic consciousness",
+        "Algorithmic divination activated",
+        "Cosmic feedback loop engaged",
+        "Rendering astral visuals",
+        "Unraveling celestial mysteries",
+        "Tuning cosmic vibes",
+        "Aligning star signals",
+        "Scanning galaxy bytes",
+        "Crunching stardust data",
+        "Beaming universal thoughts",
+        "Unlocking space secrets",
+        "Pinging cosmic clouds",
+        "Probing starry wisdom",
+        "Decoding black hole",
+        "Linking space magic",
+        "Decrypting astral code",
+        "Sending galactic texts",
+        "Catching moon beams",
+        "Syncing star waves",
+        "Channeling space whispers",
+        "Crunching nebula noise",
+        "Loading star power",
+        "Zapping space thoughts",
+        "Tapping astral signals",
+        "Fetching cosmic secrets",
+        "Finalizing space mail",
+        "Blending moon dust",
+        "Decoding void voices",
+        "Accessing galaxy chat",
+        "Translating star speech",
+        "Tuning to stardust",
+        "Vibing with cosmos",
+        "Dialing cosmic hotline",
+        "Sniffing space vibes",
+        "Unlocking universe",
+      ];
+
+      const submitButton = document.getElementById("submitButton");
+      const askAgainButton = document.getElementById("askAgainButton");
+      const spotifyEmbed = document.getElementById("spotifyEmbed");
+      const questionInput = document.getElementById("questionInput");
+      const crystalBallText = document.getElementById("crystalBallText");
+      const userQuestion = document.getElementById("userQuestion");
+
+      const backgroundMusic = new Audio(
+        "https://cdn.glitch.global/671fea6e-38c2-47e5-9d5d-b55693c3b4b0/mystery-music-loop-226835.mp3?v=1731237690392"
+      );
+      backgroundMusic.loop = true;
+
+      const fortuneSound = new Audio(
+        "https://cdn.glitch.global/671fea6e-38c2-47e5-9d5d-b55693c3b4b0/computer-processing-sound-effect-01-122131.mp3?v=1731147516635"
+      );
+      const messageSound = new Audio(
+        "https://cdn.glitch.global/671fea6e-38c2-47e5-9d5d-b55693c3b4b0/data-reveal-sound-6460.mp3?v=1731147316370"
+      );
+      const buttonClickSound = new Audio(
+        "https://cdn.glitch.global/671fea6e-38c2-47e5-9d5d-b55693c3b4b0/computer-processing-sound-effects-short-click-select-03-122132%20(1).mp3?v=1731148396386"
+      );
+
+      let isTyping = false; // Flag to track if typing is in progress
+
+      function toggleReminderBox() {
+        const reminderBox = document.getElementById("reminderBox");
+        reminderBox.style.display = "flex"; // Show the box
+
+        // Set a timeout to hide the box after 3 seconds (3000 milliseconds)
+        setTimeout(() => {
+          reminderBox.style.display = "none"; // Hide the box
+        }, 1500);
+      }
+
+      // Add event listener to the title image
+      const titleImage = document.querySelector(".title-image");
+      titleImage.addEventListener("click", toggleReminderBox);
+
+      function typeMessage(message, callback) {
+        if (isTyping) return; // Prevent multiple calls
+        isTyping = true; // Set the flag to true
+
+        let i = 0;
+        crystalBallText.textContent = "";
+        crystalBallText.classList.remove("hide-text");
+        const typingInterval = setInterval(() => {
+          crystalBallText.textContent += message[i];
+          i++;
+          if (i >= message.length) {
+            clearInterval(typingInterval);
+            setTimeout(() => {
+              isTyping = false; // Reset the flag after typing is done
+              callback();
+            }, 1000);
+          }
+        }, 100);
+      }
+
+      let shouldPlaySound = false; // Flag to control sound playback
+
+      function submitQuestion() {
+        const questionText = questionInput.value.trim();
+        const emptyQuestionReminderBox = document.getElementById(
+          "emptyQuestionReminderBox"
+        );
+
+        // Clear any existing timeouts to prevent conflicts
+        if (window.reminderTimeout) {
+          clearTimeout(window.reminderTimeout);
+        }
+
+        // Check if the question input is empty
+        if (questionText === "") {
+          console.log("No question entered, showing reminder.");
+
+          // Show the reminder box
+          emptyQuestionReminderBox.style.display = "flex"; // Show the reminder
+
+          // Store the timeout ID so we can clear it if needed
+          window.reminderTimeout = setTimeout(() => {
+            emptyQuestionReminderBox.style.display = "none"; // Hide after timeout
+            console.log("Hiding reminder box.");
+          }, 1500);
+
+          return; // Exit early, no sound or fortune
+        }
+
+        // Proceed with the rest of the logic if there is a question
+        shouldPlaySound = true; // Set flag to true since there's a question
+
+        // Hide the input and submit button
+        questionInput.style.display = "none";
+        submitButton.style.display = "none";
+
+        crystalBallText.style.opacity = 1;
+        crystalBallText.classList.remove("hide-text");
+
+        // Set font size based on question length
+        userQuestion.style.fontSize =
+          questionText.length <= 15 ? "1.2em" : "1em";
+
+        // Only show fortunes if there's a question
+        showFortunes();
+      }
+      function showFortunes(steps = 3) {
+        // Check if the flag is set before playing the sound
+        if (shouldPlaySound) {
+          fortuneSound.loop = true;
+          fortuneSound.play(); // Start the fortune sound only when there's a question
+          shouldPlaySound = false; // Reset the flag after playing
+        }
+
+        function showRandomFortune(step = 0) {
+          if (step < steps) {
+            const randomIndex = Math.floor(
+              Math.random() * fortuneMessages.length
+            );
+            typeMessage(fortuneMessages[randomIndex], () => {
+              showRandomFortune(step + 1);
+            });
+          } else {
+            // Fade out the last fortune message
+            crystalBallText.style.opacity = 0;
+            fortuneSound.pause(); // Stop the fortune sound
+            fortuneSound.currentTime = 0; // Reset sound to start
+
+            // Play the message sound just before showing the Spotify embed
+            messageSound.play().catch((error) => {
+              console.error("Message sound playback failed:", error);
+            });
+
+            setTimeout(() => {
+              const randomTrackIndex = Math.floor(
+                Math.random() * spotifyTracks.length
+              );
+              spotifyEmbed.src = spotifyTracks[randomTrackIndex];
+              spotifyEmbed.classList.add("show");
+              askAgainButton.style.display = "block";
+
+              // Show the user question after the Spotify embed is displayed
+              setTimeout(() => {
+                userQuestion.textContent = questionInput.value; // Set the user question
+                userQuestion.style.opacity = 1; // Fade in the user question
+              }, 500); // Delay to allow the Spotify embed to show
+            }, 1000); // Wait for the fade-out
+          }
+        }
+        showRandomFortune();
+      }
+
+      function resetCrystalBall() {
+        fortuneSound.pause(); // Ensure sound is stopped on reset
+        fortuneSound.currentTime = 0; // Reset to start for future playback
+
+        questionInput.value = ""; // Clear the input field
+        userQuestion.style.opacity = 0; // Hide the user question
+        userQuestion.textContent = ""; // Clear the user question text
+
+        // Hide the Spotify embed
+        spotifyEmbed.classList.remove("show");
+        spotifyEmbed.src = "about:blank"; // Reset the embed source
+
+        // Show the input field and submit button again
+        questionInput.style.display = "block";
+        submitButton.style.display = "block";
+        askAgainButton.style.display = "none"; // Hide the ask again button
+
+        crystalBallText.textContent = "";
+        crystalBallText.style.opacity = 1;
+
+        shouldPlaySound = false; // Reset the flag for next question
+      }
+
+      window.addEventListener("load", () => {
+        backgroundMusic.play().catch((error) => {
+          console.error("Playback failed:", error);
+        });
+      });
+
+      // Add event listeners for typing sound
+      questionInput.addEventListener("input", () => {
+        submitButton.disabled = questionInput.value.trim() === "";
+        const typingSound = document.getElementById("typingSound");
+        typingSound.currentTime = 0; // Reset sound to start
+        typingSound.play(); // Play the typing sound
+      });
+
+      submitButton.addEventListener("click", () => {
+        buttonClickSound.currentTime = 0; // Reset sound to start
+        buttonClickSound.play(); // Play the button click sound
+        console.log("Submit button clicked."); // Debugging log
+        submitQuestion();
+      });
+
+      askAgainButton.addEventListener("click", () => {
+        buttonClickSound.currentTime = 0; // Reset sound to start
+        buttonClickSound.play(); // Play the button click sound
+        resetCrystalBall();
+      });
+
+      titleImage.addEventListener("click", () => {
+        buttonClickSound.currentTime = 0; // Reset sound to start
+        buttonClickSound.play(); // Play the button click sound
+        toggleReminderBox();
+      });
+      // Add touch event listener for mobile compatibility
+      questionInput.addEventListener("touchstart", () => {
+        const typingSound = document.getElementById("typingSound");
+        typingSound.currentTime = 0; // Reset sound to start
+        typingSound.play(); // Play the typing sound
+      });
+
+      submitButton.addEventListener("click", () => {
+        console.log("Submit button clicked."); // Debugging log
+        submitQuestion();
+      });
+
+      const toggleMusicButton = document.getElementById("toggleMusicButton");
+      const musicIcon = document.getElementById("musicIcon");
+
+      toggleMusicButton.addEventListener("click", () => {
+        if (backgroundMusic.paused) {
+          backgroundMusic.play();
+          musicIcon.src =
+            "https://cdn.glitch.global/671fea6e-38c2-47e5-9d5d-b55693c3b4b0/Sound.png?v=1731247285437"; // Change to pause icon
+          musicIcon.alt = "Pause Music"; // Update alt text
+        } else {
+          backgroundMusic.pause();
+          musicIcon.src =
+            "https://cdn.glitch.global/671fea6e-38c2-47e5-9d5d-b55693c3b4b0/No%20Sound.png?v=1731245189599"; // Change to play icon
+          musicIcon.alt = "Play Music"; // Update alt text
+        }
+      });
+      
+      questionInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    event.preventDefault(); // Prevent default form submission or newline
+    if (questionInput.value.trim() !== "") {
+      buttonClickSound.currentTime = 0; // Reset sound to start
+      buttonClickSound.play(); // Play the button click sound
+      submitQuestion(); // Call the submit function
+    } else {
+      console.log("No question entered, showing reminder.");
+      toggleReminderBox(); // Show reminder if input is empty
+    }
+  }
+});
+      
+      function showReminderBox() {
+  const reminderBox = document.querySelector(".reminder-box");
+  console.log("Reminder box found:", reminderBox);
+  reminderBox.style.display = "flex";
+  setTimeout(() => {
+    reminderBox.style.display = "none";
+  }, 3000);
+}
+window.onload = () => {
+  console.log("Page loaded");
+  showReminderBox();
+};
+
+      
+
+
+      askAgainButton.addEventListener("click", resetCrystalBall);
+    </script>
+  </body>
+</html>
